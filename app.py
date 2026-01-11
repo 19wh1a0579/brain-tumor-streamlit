@@ -20,8 +20,7 @@ img_size = (224, 224)
 # DOWNLOAD + LOAD MODEL
 # -------------------------------
 @st.cache_resource
-def load_model():
-    @st.cache_resource
+
 def load_model():
     st.write("🔄 Checking model file...")
     if not os.path.exists(MODEL_PATH):
