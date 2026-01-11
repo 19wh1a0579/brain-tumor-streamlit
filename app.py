@@ -9,7 +9,8 @@ from tensorflow.keras.applications.resnet_v2 import preprocess_input
 # -------------------------------
 # CONFIG
 # -------------------------------
-MODEL_URL = "https://huggingface.co/YOUR_USERNAME/brain-tumor-resnet152v2/resolve/main/ResNet152V2_BrainTumor_Final.h5"
+MODEL_URL = "https://huggingface.co/suvidha-reddy/brain-tumor-resnet152v2/resolve/main/ResNet152V2_BrainTumor_Final.h5"
+
 MODEL_PATH = "ResNet152V2_BrainTumor_Final.h5"
 
 class_names = ['glioma', 'meningioma', 'notumor', 'pituitary']
