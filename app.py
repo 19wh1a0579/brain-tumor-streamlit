@@ -79,7 +79,7 @@ if uploaded_file is not None:
 
     with tf.GradientTape() as tape:
         conv_outputs, predictions = grad_model(img_array)
-        loss = predictions[:, pred_index]
+        loss = predictions[0][:, pred_index]
 
     grads = tape.gradient(loss, conv_outputs)
     pooled_grads = tf.reduce_mean(grads, axis=(0,1,2))
