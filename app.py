@@ -2,26 +2,41 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 import cv2
-import matplotlib.pyplot as plt
+import urllib.request
+import os
 from tensorflow.keras.applications.resnet_v2 import preprocess_input
 
-# Load model
-@st.cache_resource
-def load_model():
-    return tf.keras.models.load_model("ResNet152V2_BrainTumor_Final.h5")
-
-model = load_model()
+# -------------------------------
+# CONFIG
+# -------------------------------
+MODEL_URL = "https://huggingface.co/YOUR_USERNAME/brain-tumor-resnet152v2/resolve/main/ResNet152V2_BrainTumor_Final.h5"
+MODEL_PATH = "ResNet152V2_BrainTumor_Final.h5"
 
 class_names = ['glioma', 'meningioma', 'notumor', 'pituitary']
 img_size = (224, 224)
 
-st.title("🧠 Brain Tumor Classification with Explainable AI")
-st.write("Upload an MRI scan to get prediction, confidence and Grad-CAM explanation.")
+# -------------------------------
+# DOWNLOAD + LOAD MODEL
+# -------------------------------
+@st.cache_resource
+def load_model():
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Downloading model... please wait ⏳"):
+            urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+    return tf.keras.models.load_model(MODEL_PATH)
 
-uploaded_file = st.file_uploader("Upload MRI Image", type=["jpg", "png", "jpeg"])
+model = load_model()
+
+# -------------------------------
+# UI
+# -------------------------------
+st.title("🧠 Brain Tumor Classification with Explainable AI")
+st.write("Upload an MRI scan to get prediction, confidence score, and Grad-CAM heatmap.")
+st.warning("⚠️ This tool is for educational purposes only. Not a medical diagnosis.")
+
+uploaded_file = st.file_uploader("Upload MRI Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Read image
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     img_cv = cv2.imdecode(file_bytes, 1)
     img_cv = cv2.resize(img_cv, img_size)
@@ -29,8 +44,8 @@ if uploaded_file is not None:
     st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), caption="Uploaded MRI", use_column_width=True)
 
     # Preprocess
-    img = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
-    img_array = np.expand_dims(img, axis=0)
+    img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
+    img_array = np.expand_dims(img_rgb, axis=0)
     img_array = preprocess_input(img_array)
 
     # Prediction
@@ -43,8 +58,11 @@ if uploaded_file is not None:
     st.write(f"**Class:** {pred_class}")
     st.write(f"**Confidence:** {confidence:.2f}%")
 
-    # Grad-CAM
+    # -------------------------------
+    # GRAD-CAM
+    # -------------------------------
     last_conv_layer = "conv4_block6_out"
+
     grad_model = tf.keras.models.Model(
         inputs=model.inputs,
         outputs=[model.get_layer(last_conv_layer).output, model.output]
@@ -56,8 +74,8 @@ if uploaded_file is not None:
 
     grads = tape.gradient(loss, conv_outputs)
     pooled_grads = tf.reduce_mean(grads, axis=(0,1,2))
-    conv_outputs = conv_outputs[0]
 
+    conv_outputs = conv_outputs[0]
     heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
     heatmap = tf.squeeze(heatmap)
     heatmap = tf.maximum(heatmap, 0)
