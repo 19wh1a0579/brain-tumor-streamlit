@@ -51,8 +51,12 @@ if uploaded_file is not None:
     img_cv = cv2.resize(img_cv, img_size)
 
     st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), caption="Uploaded MRI", use_column_width=True)
-
+    
     # Preprocess
+    # Convert to grayscale then back to RGB
+    gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
+    img_cv = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
+
     img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
     img_array = np.expand_dims(img_rgb, axis=0)
     img_array = preprocess_input(img_array)
