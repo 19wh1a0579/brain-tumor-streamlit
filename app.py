@@ -22,15 +22,15 @@ img_size = (224, 224)
 @st.cache_resource
 
 def load_model():
-    st.write("🔄 Checking model file...")
+    # st.write("🔄 Checking model file...")
     if not os.path.exists(MODEL_PATH):
         st.write("⬇️ Downloading model from Hugging Face...")
         urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
         st.write("✅ Download completed")
 
-    st.write("🧠 Loading model into memory...")
+    # st.write("🧠 Loading model into memory...")
     model = tf.keras.models.load_model(MODEL_PATH)
-    st.write("✅ Model loaded successfully")
+    # st.write("✅ Model loaded successfully")
     return model
 
 
