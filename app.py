@@ -50,7 +50,7 @@ if uploaded_file is not None:
     img_cv = cv2.imdecode(file_bytes, 1)
     img_cv = cv2.resize(img_cv, img_size)
 
-    st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), caption="Uploaded MRI", use_column_width=True)
+    st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), caption="Uploaded MRI", width=300)
     
     # Preprocess
     # Convert to grayscale then back to RGB
@@ -102,4 +102,4 @@ if uploaded_file is not None:
     overlay = cv2.addWeighted(img_cv, 0.75, heatmap, 0.25, 0)
 
     st.subheader("🧩 Grad-CAM Explanation")
-    st.image(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB), use_column_width=True)
+    st.image(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB), width=350)
