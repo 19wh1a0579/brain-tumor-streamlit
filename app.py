@@ -50,7 +50,7 @@ if uploaded_file is not None:
     img_cv = cv2.imdecode(file_bytes, 1)
     img_cv = cv2.resize(img_cv, img_size)
 
-    st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), caption="Uploaded MRI", width=300)
+    st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), caption="Uploaded MRI", width=350)
     
     # Preprocess
     # Convert to grayscale then back to RGB
