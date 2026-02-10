@@ -28,7 +28,7 @@ def load_model():
         urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
         st.write("✅ Download completed")
 
-    # st.write("🧠 Loading model into memory...")
+    # st.write("Loading model into memory...")
     model = tf.keras.models.load_model(MODEL_PATH)
     # st.write("✅ Model loaded successfully")
     return model
@@ -39,7 +39,7 @@ model = load_model()
 # -------------------------------
 # UI
 # -------------------------------
-st.title("🧠 Brain Tumor Classification with Explainable AI")
+st.title("Brain Tumor Classification with Explainable AI")
 st.write("Upload an MRI scan to get prediction, confidence score, and Grad-CAM heatmap.")
 st.warning("⚠️ This tool is for educational purposes only. Not a medical diagnosis.")
 
@@ -67,7 +67,7 @@ if uploaded_file is not None:
     pred_class = class_names[pred_index]
     confidence = np.max(preds) * 100
 
-    st.subheader("🔮 Prediction")
+    st.subheader("Prediction")
     st.write(f"**Class:** {pred_class}")
     st.write(f"**Confidence:** {confidence:.2f}%")
 
@@ -101,5 +101,5 @@ if uploaded_file is not None:
 
     overlay = cv2.addWeighted(img_cv, 0.75, heatmap, 0.25, 0)
 
-    st.subheader("🧩 Grad-CAM Explanation")
+    st.subheader("Grad-CAM Explanation")
     st.image(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB), width=350)
